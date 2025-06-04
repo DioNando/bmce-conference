@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class MeetingController extends Controller
@@ -115,10 +116,10 @@ class MeetingController extends Controller
 
         // Load data for filters
         $rooms = Room::orderBy('name')->get();
-        $issuers = User::with('organization')->role('issuer')->orderBy('name')->get();
-        $dates = \DB::table('time_slots')
+        $issuers = User::with('organization')->role('issuer')->whereNotNull('organization_id')->orderBy('name')->get();
+        $dates = DB::table('time_slots')
             ->join('meetings', 'time_slots.id', '=', 'meetings.time_slot_id')
-            ->select(\DB::raw('DATE(time_slots.date) as date'))
+            ->select(DB::raw('DATE(time_slots.date) as date'))
             ->distinct()
             ->orderBy('date', 'desc')
             ->pluck('date');
@@ -134,8 +135,17 @@ class MeetingController extends Controller
         $user = Auth::user();
 
         $rooms = Room::all();
-        $timeSlots = TimeSlot::where('availability', true)->get();
-        $issuers = User::role(UserRole::ISSUER->value)->get();
+
+        // Récupérer seulement les créneaux disponibles sans réunion
+        $timeSlots = TimeSlot::where('availability', true)
+            ->whereDoesntHave('meetings', function ($query) {
+                $query->where('status', '!=', MeetingStatus::CANCELLED->value);
+            })
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+
+        $issuers = User::role(UserRole::ISSUER->value)->whereNotNull('organization_id')->get();
         $investors = User::role(UserRole::INVESTOR->value)->get();
 
         return view('admin.meetings.create', compact('rooms', 'timeSlots', 'issuers', 'investors'));
@@ -148,17 +158,27 @@ class MeetingController extends Controller
     {
         $user = Auth::user();
 
-
-
         $validated = $request->validate([
             'room_id' => 'nullable|exists:rooms,id',
             'time_slot_id' => 'required|exists:time_slots,id',
             'issuer_id' => 'required|exists:users,id',
             'investor_ids' => 'required|array',
             'investor_ids.*' => 'exists:users,id',
+            'status' => 'nullable|string|in:' . implode(',', array_map(fn($status) => $status->value, MeetingStatus::all())),
             'notes' => 'nullable|string',
             'is_one_on_one' => 'boolean',
         ]);
+
+        // Vérifier qu'il n'y a pas déjà une réunion pour cet émetteur sur ce créneau
+        $existingMeeting = Meeting::where('time_slot_id', $validated['time_slot_id'])
+            ->where('issuer_id', $validated['issuer_id'])
+            ->where('status', '!=', MeetingStatus::CANCELLED->value)
+            ->first();
+
+        if ($existingMeeting) {
+            return back()->with('error', 'This issuer already has a meeting scheduled for this time slot.')
+                ->withInput();
+        }
 
         DB::beginTransaction();
 
@@ -169,7 +189,7 @@ class MeetingController extends Controller
                 'issuer_id' => $validated['issuer_id'],
                 'created_by_id' => $user->id,
                 'updated_by_id' => $user->id,
-                'status' => MeetingStatus::SCHEDULED,
+                'status' => $validated['status'] ?? MeetingStatus::SCHEDULED->value,
                 'notes' => $validated['notes'] ?? null,
                 'is_one_on_one' => $validated['is_one_on_one'] ?? false,
             ]);
@@ -184,12 +204,12 @@ class MeetingController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.meetings.index')
-                ->with('success', 'Réunion créée avec succès.');
+            return redirect()->route('admin.meetings.show', $meeting)
+                ->with('success', 'Meeting created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return back()->with('error', 'Échec de la création de la réunion: ' . $e->getMessage())
+            return back()->with('error', 'Failed to create meeting: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -218,10 +238,20 @@ class MeetingController extends Controller
         $meeting->load(['issuer', 'investors']);
 
         $rooms = Room::all();
+
+        // Récupérer les créneaux disponibles sans réunion + le créneau actuel de cette réunion
         $timeSlots = TimeSlot::where('availability', true)
-            ->orWhere('id', $meeting->time_slot_id)
+            ->where(function ($query) use ($meeting) {
+                $query->whereDoesntHave('meetings', function ($subQuery) {
+                    $subQuery->where('status', '!=', MeetingStatus::CANCELLED->value);
+                })
+                ->orWhere('id', $meeting->time_slot_id);
+            })
+            ->orderBy('date')
+            ->orderBy('start_time')
             ->get();
-        $issuers = User::role(UserRole::ISSUER->value)->get();
+
+        $issuers = User::role(UserRole::ISSUER->value)->whereNotNull('organization_id')->get();
         $investors = User::role(UserRole::INVESTOR->value)->get();
 
         return view('admin.meetings.edit', compact('meeting', 'rooms', 'timeSlots', 'issuers', 'investors'));
@@ -243,7 +273,7 @@ class MeetingController extends Controller
             'investor_ids' => 'required|array',
             'investor_ids.*' => 'exists:users,id',
             'notes' => 'nullable|string',
-            'status' => 'required|string',
+            'status' => 'nullable|string|in:' . implode(',', array_map(fn($status) => $status->value, MeetingStatus::all())),
             'is_one_on_one' => 'boolean',
         ]);
 

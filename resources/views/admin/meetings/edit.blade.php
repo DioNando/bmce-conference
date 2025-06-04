@@ -55,7 +55,7 @@
                                     @foreach ($issuers as $issuer)
                                         <option value="{{ $issuer->id }}"
                                             {{ old('issuer_id', $meeting->issuer_id) == $issuer->id ? 'selected' : '' }}>
-                                            {{ $issuer->name }}
+                                            {{ $issuer->name . ' ' . $issuer->first_name }}
                                             @if ($issuer->organization)
                                                 ({{ $issuer->organization->name }})
                                             @endif
