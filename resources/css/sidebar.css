@@ -1,0 +1,181 @@
+/* Variables pour la configuration de la sidebar */
+:root {
+    --sidebar-expanded-width: 16rem; /* 256px - w-64 */
+    --sidebar-collapsed-width: 5rem; /* 80px - w-20 */
+    --sidebar-transition-duration: 0.3s;
+}
+
+/* Sidebar state styling - Layout de base */
+#sidebar {
+    transition: width var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed #sidebar {
+    width: var(--sidebar-collapsed-width);
+}
+
+html.sidebar-expanded #sidebar {
+    width: var(--sidebar-expanded-width);
+}
+
+#content {
+    transition: padding-left var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed #content {
+    padding-left: var(--sidebar-collapsed-width);
+}
+
+html.sidebar-expanded #content {
+    padding-left: var(--sidebar-expanded-width);
+}
+
+.sidebar-content {
+    transition: padding var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed .sidebar-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+html.sidebar-expanded .sidebar-content {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* Sidebar links styling */
+.sidebar-link {
+    transition: justify-content var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+}
+
+html.sidebar-expanded .sidebar-link {
+    justify-content: flex-start;
+}
+
+/* Sidebar icons styling */
+.sidebar-icon {
+    transition: all var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed .sidebar-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+}
+
+html.sidebar-expanded .sidebar-icon {
+    width: 1rem;
+    height: 1rem;
+    min-width: 1rem;
+    min-height: 1rem;
+}
+
+/* Sidebar labels styling */
+.sidebar-label {
+    transition: opacity var(--sidebar-transition-duration) ease-in-out,
+        max-width var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed .sidebar-label {
+    opacity: 0;
+    max-width: 0;
+    display: none;
+    overflow: hidden;
+}
+
+html.sidebar-expanded .sidebar-label {
+    opacity: 1;
+    max-width: 100%;
+    display: inline;
+}
+
+/* Sidebar nav styling */
+.sidebar-nav {
+    transition: text-align var(--sidebar-transition-duration) ease-in-out;
+}
+
+html.sidebar-collapsed .sidebar-nav {
+    text-align: center;
+}
+
+html.sidebar-expanded .sidebar-nav {
+    text-align: left;
+}
+
+/* Responsive styling */
+@media (max-width: 1023px) {
+    /* Suppression du padding sur mobile puisque la sidebar est en off-canvas */
+    html.sidebar-collapsed #content,
+    html.sidebar-expanded #content {
+        padding-left: 0 !important;
+    }
+
+    /* Cache la sidebar desktop sur mobile */
+    #sidebar {
+        display: none !important;
+    }
+}
+
+/* Optimisation pour tablettes en mode paysage */
+@media (min-width: 1024px) and (max-width: 1279px) {
+    :root {
+        --sidebar-expanded-width: 14rem; /* Légèrement plus petit sur tablette */
+    }
+}
+
+/* Style pour le menu dropdown mobile */
+.mobile-menu-dropdown {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.mobile-menu-dropdown .sidebar-link {
+    justify-content: flex-start;
+    color: var(--color-gray-700);
+    border-radius: 0.5rem;
+}
+
+.mobile-menu-dropdown .sidebar-link:hover {
+    background-color: var(--color-base-200);
+}
+
+.mobile-menu-dropdown .sidebar-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.mobile-menu-dropdown .mobile-active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.mobile-menu-dropdown .mobile-inactive {
+    color: var(--color-gray-700);
+}
+
+.mobile-menu-dropdown .mobile-inactive:hover {
+    background-color: var(--color-base-200);
+    color: var(--color-gray-900);
+}
+
+.mobile-menu-dropdown .sidebar-nav {
+    text-align: left;
+}
+
+.mobile-menu-dropdown .sidebar-label {
+    display: inline !important;
+    opacity: 1 !important;
+    max-width: 100% !important;
+    color: inherit;
+}
+
+/* Hide Alpine content until Alpine.js is loaded */
+[x-cloak] {
+    display: none;
+}

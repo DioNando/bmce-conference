@@ -1,0 +1,50 @@
+button,
+a {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+// Animation pour les éléments du compteur
+.countdown-el {
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    transform: translateY(20px);
+
+    // Animation décalée pour chaque élément du compteur
+    &:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    &:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+    &:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+    &:nth-child(7) {
+        animation-delay: 0.7s;
+    }
+
+    // Animation de mise à jour des valeurs
+    span {
+        transition: all 0.4s cubic-bezier(0.5, 0, 0.3, 1);
+        display: inline-block;
+
+        &.updating {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
