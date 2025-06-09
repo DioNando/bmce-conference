@@ -2,19 +2,19 @@
     <x-slot name="header">
         <div class="breadcrumbs text-sm mb-4">
             <ul>
-                <li><a href="{{ route('admin.dashboard') }}" class="text-primary">{{ __("Dashboard") }}</a></li>
-                <li><a href="{{ route('admin.diagrams.index') }}" class="text-primary">{{ __("Diagrammes") }}</a></li>
-                <li>{{ __("Système de Permissions") }}</li>
+                <li><a href="{{ route('admin.dashboard') }}" class="text-primary">{{ __('Dashboard') }}</a></li>
+                <li><a href="{{ route('admin.diagrams.index') }}" class="text-primary">{{ __('Diagrammes') }}</a></li>
+                <li>{{ __('Système de Permissions') }}</li>
             </ul>
         </div>
         <div class="flex justify-between items-center">
             <h3 class="flex items-center gap-2 text-2xl font-bold text-primary">
-                {{ __("Architecture des Permissions") }}
+                {{ __('Architecture des Permissions') }}
             </h3>
             <div>
                 <a href="{{ route('admin.diagrams.index') }}" class="btn btn-ghost rounded-full">
                     <x-heroicon-s-arrow-left class="size-4" />
-                    {{ __("Retour") }}
+                    {{ __('Retour') }}
                 </a>
             </div>
         </div>
@@ -23,17 +23,19 @@
     <section class="space-y-8">
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <h2 class="card-title text-primary">{{ __("Système de Rôles et Permissions") }}</h2>
+                <h2 class="card-title text-primary">{{ __('Système de Rôles et Permissions') }}</h2>
                 <p class="text-base-content/70 mb-4">
-                    Ce diagramme détaille l'architecture du système de permissions basé sur le package Spatie Laravel Permission.
-                    Il montre comment les rôles et permissions sont structurés pour gérer l'accès aux différentes fonctionnalités du système.
-                    Cette architecture flexible permet une gestion granulaire des droits d'accès selon les profils utilisateurs (Admin, Investor, Issuer).
+                    Ce diagramme détaille l'architecture du système de permissions basé sur le package Spatie Laravel
+                    Permission.
+                    Il montre comment les rôles et permissions sont structurés pour gérer l'accès aux différentes
+                    fonctionnalités du système.
+                    Cette architecture flexible permet une gestion granulaire des droits d'accès selon les profils
+                    utilisateurs (Admin, Investor, Issuer).
                 </p>
             </div>
         </div>
 
-        <x-diagram.mermaid
-            title="Architecture Spatie Laravel Permission"
+        <x-diagram.mermaid title="Architecture Spatie Laravel Permission"
             description="Ce diagramme de classes présente l'architecture complète du système de permissions utilisant le package Spatie Laravel Permission. Il montre les relations entre les modèles User, Role et Permission, ainsi que les tables pivot et les méthodes disponibles pour la gestion des droits d'accès."
             definition="classDiagram
                 %% Core Permission Classes (Spatie Package)
@@ -222,18 +224,6 @@
                 Role }|--|| ModelHasRoles : through
                 User }|--|| ModelHasPermissions : through
                 Permission }|--|| ModelHasPermissions : through
-
-                %% Styling
-                classDef spatieClass fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px
-                classDef pivotClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
-                classDef appClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-                classDef enumClass fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-
-                class Role,Permission spatieClass
-                class ModelHasPermissions,ModelHasRoles,RoleHasPermissions pivotClass
-                class User,Organization appClass
-                class PermissionGroup,SystemRoles,SystemPermissions enumClass
-            "
-        />
+            " />
     </section>
 </x-app-layout>

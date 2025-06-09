@@ -66,7 +66,7 @@
 
         <section id="features" class="py-12">
             <div class="container mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-12 text-secondary">
+                <h2 class="text-3xl font-bold text-center mb-3 text-secondary">
                     {{ __('Conference Features') }}</h2>
 
                 @if ($nearestEvent && $nearestEvent->description)

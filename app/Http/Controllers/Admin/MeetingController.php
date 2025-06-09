@@ -180,6 +180,24 @@ class MeetingController extends Controller
                 ->withInput();
         }
 
+        // Vérifier qu'aucun investisseur n'a déjà une participation confirmée sur ce créneau
+        foreach ($validated['investor_ids'] as $investorId) {
+            $conflictingMeeting = Meeting::where('time_slot_id', $validated['time_slot_id'])
+                ->where('status', '!=', MeetingStatus::CANCELLED->value)
+                ->whereHas('meetingInvestors', function ($query) use ($investorId) {
+                    $query->where('investor_id', $investorId)
+                          ->where('status', \App\Enums\InvestorStatus::CONFIRMED->value);
+                })
+                ->with('issuer')
+                ->first();
+
+            if ($conflictingMeeting) {
+                $investor = User::find($investorId);
+                return back()->with('error', "Investor {$investor->name} {$investor->first_name} already has a confirmed participation with {$conflictingMeeting->issuer->name} {$conflictingMeeting->issuer->first_name} on this time slot.")
+                    ->withInput();
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -276,6 +294,37 @@ class MeetingController extends Controller
             'status' => 'nullable|string|in:' . implode(',', array_map(fn($status) => $status->value, MeetingStatus::all())),
             'is_one_on_one' => 'boolean',
         ]);
+
+        // Vérifier qu'il n'y a pas déjà une réunion pour cet émetteur sur ce créneau (sauf la réunion actuelle)
+        $existingMeeting = Meeting::where('time_slot_id', $validated['time_slot_id'])
+            ->where('issuer_id', $validated['issuer_id'])
+            ->where('status', '!=', MeetingStatus::CANCELLED->value)
+            ->where('id', '!=', $meeting->id)
+            ->first();
+
+        if ($existingMeeting) {
+            return back()->with('error', 'This issuer already has a meeting scheduled for this time slot.')
+                ->withInput();
+        }
+
+        // Vérifier qu'aucun investisseur n'a déjà une participation confirmée sur ce créneau (sauf la réunion actuelle)
+        foreach ($validated['investor_ids'] as $investorId) {
+            $conflictingMeeting = Meeting::where('time_slot_id', $validated['time_slot_id'])
+                ->where('status', '!=', MeetingStatus::CANCELLED->value)
+                ->where('id', '!=', $meeting->id)
+                ->whereHas('meetingInvestors', function ($query) use ($investorId) {
+                    $query->where('investor_id', $investorId)
+                          ->where('status', \App\Enums\InvestorStatus::CONFIRMED->value);
+                })
+                ->with('issuer')
+                ->first();
+
+            if ($conflictingMeeting) {
+                $investor = User::find($investorId);
+                return back()->with('error', "Investor {$investor->name} {$investor->first_name} already has a confirmed participation with {$conflictingMeeting->issuer->name} {$conflictingMeeting->issuer->first_name} on this time slot.")
+                    ->withInput();
+            }
+        }
 
         DB::beginTransaction();
 
@@ -473,7 +522,7 @@ class MeetingController extends Controller
             return back()->with('success', 'Email d\'invitation envoyé avec succès.');
         } catch (\Exception $e) {
             // Enregistrer l'erreur complète dans les logs
-            \Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
+            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()
             ]);
@@ -525,7 +574,7 @@ class MeetingController extends Controller
                 }
             } catch (\Exception $e) {
                 // Log l'erreur pour le debugging
-                \Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
+                Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
                     'investorId' => $investorId,
                     'exception' => $e,
                     'trace' => $e->getTraceAsString()

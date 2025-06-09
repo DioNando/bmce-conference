@@ -41,7 +41,6 @@
                 participant EV as ExportValidator
                 participant QS as QueueService
                 participant EJ as ExportJob
-                parameter LE as LaravelExcel
                 participant FS as FileStorage
                 participant NS as NotificationService
                 participant ES as EmailService
