@@ -31,7 +31,7 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                {{-- @livewire('notifications') --}}
+                @livewire('notifications')
                 <!-- Language Switcher -->
                 <div class="mr-4">
                     <a href="{{ route('language.switch', 'fr') }}"

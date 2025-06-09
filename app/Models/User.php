@@ -132,4 +132,20 @@ class User extends Authenticatable
     {
         return $this->hasRole(UserRole::ADMIN->value);
     }
+    
+    /**
+     * Get all notifications for this user.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
+    }
+    
+    /**
+     * Get unread notifications for this user.
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
 }

@@ -206,6 +206,21 @@ if (app()->environment('local', 'development')) {
             return response()->view("errors.{$code}", $data, (int)$code);
         })->where('code', '401|403|404|405|419|422|429|500|503');
     });
+    
+    // Route de test pour les notifications
+    Route::get('/test-notifications', [App\Http\Controllers\NotificationTestController::class, 'generateTestNotifications'])
+        ->middleware('auth')
+        ->name('notifications.test');
 }
+
+// Routes for Notifications
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/{id}/mark-as-unread', [App\Http\Controllers\NotificationController::class, 'markAsUnread'])->name('notifications.mark-as-unread');
+    Route::post('/notifications/mark-all-as-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/delete', [App\Http\Controllers\NotificationController::class, 'delete'])->name('notifications.delete');
+    Route::post('/notifications/delete-all-read', [App\Http\Controllers\NotificationController::class, 'deleteAllRead'])->name('notifications.delete-all-read');
+});
 
 require __DIR__ . '/auth.php';
