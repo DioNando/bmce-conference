@@ -206,7 +206,7 @@ if (app()->environment('local', 'development')) {
             return response()->view("errors.{$code}", $data, (int)$code);
         })->where('code', '401|403|404|405|419|422|429|500|503');
     });
-    
+
     // Route de test pour les notifications
     Route::get('/test-notifications', [App\Http\Controllers\NotificationTestController::class, 'generateTestNotifications'])
         ->middleware('auth')

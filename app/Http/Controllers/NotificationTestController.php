@@ -23,7 +23,7 @@ class NotificationTestController extends Controller
     public function generateTestNotifications()
     {
         $user = Auth::user();
-        
+
         // Création d'une notification basique
         $this->notificationService->create(
             $user->id,
@@ -34,7 +34,7 @@ class NotificationTestController extends Controller
 
         // Si des meetings existent, créer des notifications liées à un meeting
         $meetings = Meeting::take(2)->get();
-        
+
         if ($meetings->isNotEmpty()) {
             foreach ($meetings as $meeting) {
                 $this->notificationService->createMeetingNotification(

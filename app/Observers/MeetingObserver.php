@@ -28,16 +28,6 @@ class MeetingObserver
                 "Un meeting a été planifié avec vous le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')}."
             );
         }
-
-        // Notifier tous les investisseurs associés
-        foreach ($meeting->investors as $investor) {
-            $this->notificationService->createMeetingNotification(
-                $investor->id,
-                $meeting,
-                'Invitation à un meeting',
-                "Vous êtes invité à un meeting avec {$meeting->issuer->organization->name} le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')}."
-            );
-        }
     }
 
     /**

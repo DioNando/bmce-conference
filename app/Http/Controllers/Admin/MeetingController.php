@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Services\NotificationService;
 
 class MeetingController extends Controller
 {
@@ -216,9 +217,19 @@ class MeetingController extends Controller
             foreach ($validated['investor_ids'] as $investorId) {
                 $meeting->meetingInvestors()->create([
                     'investor_id' => $investorId,
-                    'status' => MeetingStatus::CONFIRMED->value, // L'admin peut directement confirmer les participants
+                    'status' => MeetingStatus::CONFIRMED->value,
                 ]);
             }
+
+            // Rechargez les relations pour avoir les investisseurs associés
+            $meeting->load('investors');
+
+            // Déclenchez manuellement les notifications
+            app(NotificationService::class)->notifyMeetingInvestors(
+                $meeting,
+                'Invitation à un meeting',
+                "Vous êtes invité à un meeting avec {$meeting->issuer->organization->name} le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')}."
+            );
 
             DB::commit();
 
@@ -349,6 +360,16 @@ class MeetingController extends Controller
                 ]);
             }
 
+            // // Rechargez les relations pour avoir les investisseurs associés
+            // $meeting->load(['investors', 'issuer', 'timeSlot']);
+
+            // // Déclenchez manuellement les notifications de mise à jour
+            // app(NotificationService::class)->notifyMeetingInvestors(
+            //     $meeting,
+            //     'Mise à jour de meeting',
+            //     "Le meeting avec {$meeting->issuer->organization->name} a été mis à jour. Il est maintenant prévu le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')}."
+            // );
+
             DB::commit();
 
             return redirect()->route('admin.meetings.show', $meeting)
@@ -366,11 +387,21 @@ class MeetingController extends Controller
      */
     public function destroy(Meeting $meeting)
     {
-        $user = Auth::user();
-
-
-
         try {
+            // // Chargez les relations avant la suppression pour pouvoir notifier
+            // $meeting->load(['investors', 'issuer', 'timeSlot']);
+
+            // // Créez un message de notification pour les investisseurs
+            // $notificationMessage = "Le meeting avec {$meeting->issuer->organization->name} prévu le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')} a été annulé.";
+
+            // // Envoyez les notifications manuellement avant de supprimer
+            // app(NotificationService::class)->notifyMeetingInvestors(
+            //     $meeting,
+            //     'Annulation de meeting',
+            //     $notificationMessage
+            // );
+
+            // // Supprimez la réunion
             $meeting->delete();
 
             return redirect()->route('admin.meetings.index')

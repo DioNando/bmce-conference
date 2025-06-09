@@ -151,6 +151,11 @@ class UserController extends Controller
 
         $user->assignRole($validated['role']);
 
+        // Si c'est un émetteur, générer les créneaux horaires automatiquement
+        if ($validated['role'] === UserRole::ISSUER->value) {
+            $this->generateTimeSlots($user);
+        }
+
         // Send activation email if checkbox is checked
         if (isset($validated['send_activation_email']) && $validated['send_activation_email']) {
             // Generate a new random password

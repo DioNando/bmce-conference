@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
 
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
@@ -132,7 +133,7 @@ class User extends Authenticatable
     {
         return $this->hasRole(UserRole::ADMIN->value);
     }
-    
+
     /**
      * Get all notifications for this user.
      */
@@ -140,7 +141,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class)->orderBy('created_at', 'desc');
     }
-    
+
     /**
      * Get unread notifications for this user.
      */

@@ -4,12 +4,14 @@
     <button @click="open = !open" @click.away="open = false" type="button"
         class="relative btn btn-ghost btn-circle text-primary">
         <span class="sr-only">Voir les notifications</span>
-        <x-heroicon-s-bell class="size-6" />
         @if ($count > 0)
+            <x-heroicon-s-bell class="size-6" />
             <span
                 class="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
                 {{ $count }}
             </span>
+        @else
+            <x-heroicon-o-bell class="size-6 text-base-content/70" />
         @endif
     </button>
 
@@ -22,25 +24,29 @@
             <div class="px-4 py-3 bg-primary text-primary-content flex justify-between items-center">
                 <h3 class="text-sm font-semibold">Notifications</h3>
                 @if ($count > 0)
-                    <button wire:click="markAllAsRead" class="btn btn-ghost btn-xs text-primary-content">Tout marquer comme lu</button>
+                    <button wire:click="markAllAsRead" class="btn btn-ghost btn-xs text-primary-content">Tout marquer
+                        comme lu</button>
                 @endif
             </div>
 
             {{-- Notification List --}}
             <div class="max-h-96 overflow-y-auto">
                 @forelse ($notifications as $notification)
-                    <div class="list-row px-4 py-3 hover:bg-base-200 border-b border-base-200 {{ $notification['read'] ? '' : 'bg-base-200' }}">
+                    <div
+                        class="list-row px-4 py-3 hover:bg-base-200 border-b border-base-200 {{ $notification['read'] ? '' : 'bg-base-200' }}">
                         <div class="flex items-start gap-3">
                             <div class="flex-shrink-0">
                                 <div class="avatar {{ $notification['read'] ? '' : 'online' }}">
                                     <div class="w-10 rounded-full">
-                                        <img src="{{ $notification['avatar'] ?? 'https://ui-avatars.com/api/?name=Meeting&background=random' }}" alt="Avatar" />
+                                        <img src="{{ $notification['avatar'] ?? 'https://ui-avatars.com/api/?name=Meeting&background=random' }}"
+                                            alt="Avatar" />
                                     </div>
                                 </div>
                             </div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-start">
-                                    <p class="text-sm font-medium {{ $notification['read'] ? 'text-base-content' : 'text-primary' }}">
+                                    <p
+                                        class="text-sm font-medium {{ $notification['read'] ? 'text-base-content' : 'text-primary' }}">
                                         {{ $notification['title'] }}
                                     </p>
                                     <span class="text-xs text-base-content/70">{{ $notification['time'] }}</span>
@@ -50,7 +56,8 @@
                                     <a href="{{ $notification['action_url'] }}" class="btn btn-xs btn-primary">
                                         {{ $notification['action_text'] ?? 'Voir détails' }}
                                     </a>
-                                    <button wire:click="markAsRead('{{ $notification['id'] }}')" class="btn btn-xs btn-ghost">
+                                    <button wire:click="markAsRead('{{ $notification['id'] }}')"
+                                        class="btn btn-xs btn-ghost">
                                         {{ $notification['read'] ? 'Marquer comme non-lu' : 'Marquer comme lu' }}
                                     </button>
                                 </div>

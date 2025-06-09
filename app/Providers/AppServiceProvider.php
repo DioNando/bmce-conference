@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Meeting;
 use App\Models\User;
+use App\Observers\MeetingObserver;
 use App\Observers\UserObserver;
 use App\View\Components\Card\Card;
 use App\View\Components\Form\Form;
@@ -32,8 +34,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('form', Form::class);
         Blade::component('table', Table::class);
 
-        // Register observers
-        User::observe(UserObserver::class);
 
         // Disable Debugbar
         // \Debugbar::disable();

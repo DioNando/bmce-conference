@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Meeting;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,7 +49,7 @@ class NotificationService
      * @param array $data
      * @return Notification
      */
-    public function createMeetingNotification(int $userId, \App\Models\Meeting $meeting, string $title, string $message, array $data = [])
+    public function createMeetingNotification(int $userId, Meeting $meeting, string $title, string $message, array $data = [])
     {
         return $this->create($userId, $title, $message, 'meeting', $meeting, $data);
     }
@@ -61,7 +62,7 @@ class NotificationService
      * @param string $message
      * @return array Notifications créées
      */
-    public function notifyMeetingInvestors(\App\Models\Meeting $meeting, string $title, string $message)
+    public function notifyMeetingInvestors(Meeting $meeting, string $title, string $message)
     {
         $notifications = [];
 
@@ -72,7 +73,7 @@ class NotificationService
                 $title,
                 $message,
                 ['meeting_id' => $meeting->id]
-            );
+                );
         }
 
         return $notifications;
