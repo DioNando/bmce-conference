@@ -38,18 +38,7 @@
                             <div>
                                 <div class="text-sm font-medium text-base-content/70">{{ __('Status') }}</div>
                                 <div class="mt-1">
-                                    @php
-                                        $badgeClass = match($meeting->status->value) {
-                                            \App\Enums\MeetingStatus::SCHEDULED->value => 'badge-success',
-                                            \App\Enums\MeetingStatus::COMPLETED->value => 'badge-success',
-                                            \App\Enums\MeetingStatus::CANCELLED->value => 'badge-error',
-                                            \App\Enums\MeetingStatus::PENDING->value => 'badge-warning',
-                                            \App\Enums\MeetingStatus::CONFIRMED->value => 'badge-info',
-                                            \App\Enums\MeetingStatus::DECLINED->value => 'badge-error',
-                                            default => 'badge-neutral',
-                                        };
-                                    @endphp
-                                    <span class="badge {{ $badgeClass }}">
+                                    <span class="badge badge-{{ $meeting->status->color() }}">
                                         {{ __($meeting->status->label()) }}
                                     </span>
                                 </div>

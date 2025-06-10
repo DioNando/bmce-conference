@@ -65,34 +65,7 @@
                             <div>
                                 <div class="text-sm font-medium text-base-content/70">{{ __('Status') }}</div>
                                 <div class="mt-1">
-                                    @switch($meeting->status->value)
-                                        @case($MEETING_STATUS::SCHEDULED->value)
-                                            <span class="badge badge-info">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @case($MEETING_STATUS::COMPLETED->value)
-                                            <span class="badge badge-success">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @case($MEETING_STATUS::CANCELLED->value)
-                                            <span class="badge badge-error">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @case($MEETING_STATUS::PENDING->value)
-                                            <span class="badge badge-warning">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @case($MEETING_STATUS::CONFIRMED->value)
-                                            <span class="badge badge-success">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @case($MEETING_STATUS::DECLINED->value)
-                                            <span class="badge badge-error">{{ __($meeting->status->label()) }}</span>
-                                        @break
-
-                                        @default
-                                            <span class="badge badge-neutral">{{ __($meeting->status->label()) }}</span>
-                                    @endswitch
+                                    <span class="badge badge-{{ $meeting->status->color() }}">{{ __($meeting->status->label()) }}</span>
                                 </div>
                             </div>
 

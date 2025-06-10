@@ -71,7 +71,11 @@ class OrganizationController extends Controller
         }
 
         $organizations = $query->with('country')->paginate(10)->withQueryString();
-        $countries = Country::orderBy('name_en')->get();
+
+        // Get only countries that have at least one organization
+        $countries = Country::whereHas('organizations')
+            ->orderBy('name_en')
+            ->get();
 
         return view('admin.organizations.index', compact('organizations', 'countries', 'sortBy', 'sortOrder'));
     }

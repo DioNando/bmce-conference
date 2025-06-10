@@ -21,6 +21,7 @@ class IssuerController extends Controller
         $query = User::whereHas('roles', function($query) {
                         $query->where('name', UserRole::ISSUER->value);
                     })
+                    ->whereHas('organization')
                     ->with('organization', 'organization.country')
                     ->where('status', true);
 
@@ -65,7 +66,10 @@ class IssuerController extends Controller
         $issuers = $query->orderBy('name')->get();
 
         // Get countries and organization types for filter dropdowns
-        $countries = Country::orderBy('name_en')->get();
+        // Only get countries that have at least one organization
+        $countries = Country::whereHas('organizations')
+            ->orderBy('name_en')
+            ->get();
 
         return view('investor.issuers.index', compact('issuers', 'countries'));
     }

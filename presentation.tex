@@ -1,0 +1,228 @@
+\documentclass{beamer}
+
+% Setting the theme and font
+\usetheme{Madrid}
+\usecolortheme{default}
+\usepackage{noto}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+% Title slide
+\title{Digitalisation du Processus de Planification des Rencontres Financières}
+\subtitle{Application Web pour la BMCE Capital Investors Conference 2025}
+\author{Tolotra David Fernando RAZAFIMAHEFA}
+\institute{Institut Supérieur de Management (ISMAGI)}
+\date{Juillet 2025}
+
+\begin{document}
+
+% Slide 1: Title
+\begin{frame}
+\maketitle
+\end{frame}
+
+% Slide 2: Remerciements
+\begin{frame}{Remerciements}
+\begin{itemize}
+    \item Gratitude envers ISMAGI pour l'environnement d'apprentissage stimulant
+    \item Remerciements à l'encadrante pédagogique, Mme Bouchra HONNIT
+    \item Remerciements à l'encadrant professionnel, M. Amine BOUCHAMA, et l'équipe de Wave Inc.
+    \item Soutien de la famille et des amis pour leur encouragement constant
+\end{itemize}
+\end{frame}
+
+% Slide 3: Résumé
+\begin{frame}{Résumé}
+\begin{itemize}
+    \item \textbf{Objectif} : Digitalisation de la planification des réunions pour la BMCE Capital Investors Conference 2025
+    \item \textbf{Solution} : Plateforme web avec architecture MVC (Laravel 12, Tailwind CSS, Alpine.js)
+    \item \textbf{Fonctionnalités} :
+    \begin{itemize}
+        \item Gestion des utilisateurs (administrateurs, émetteurs, investisseurs)
+        \item Planification automatisée des réunions
+        \item Module de questions/réponses
+        \item Outils de reporting
+    \end{itemize}
+    \item \textbf{Bénéfices} : Élimination des erreurs manuelles, autonomie des participants, données analytiques
+\end{itemize}
+\end{frame}
+
+% Slide 4: Contexte Général
+\begin{frame}{Contexte Général}
+\begin{itemize}
+    \item \textbf{Organisme d'accueil} : Wave Inc., agence digitale à Rabat, spécialisée en transformation numérique
+    \item \textbf{Problématique actuelle} :
+    \begin{itemize}
+        \item Processus manuel chronophage
+        \item Risque d'erreurs humaines
+        \item Manque de flexibilité et d'autonomie
+    \end{itemize}
+    \item \textbf{Solution proposée} : Plateforme web centralisée pour une gestion automatisée
+\end{itemize}
+\end{frame}
+
+% Slide 5: Objectifs
+\begin{frame}{Objectifs}
+\begin{itemize}
+    \item \textbf{Stratégiques} :
+    \begin{itemize}
+        \item Moderniser l'image de BMCE
+        \item Améliorer la satisfaction des participants
+        \item Optimiser les ressources humaines
+    \end{itemize}
+    \item \textbf.Opérationnels} :
+    \begin{itemize}
+        \item Réduire le temps de planification
+        \item Éliminer les erreurs manuelles
+        \item Faciliter la gestion des modifications
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 6: Analyse des Besoins
+\begin{frame}{Analyse des Besoins}
+\begin{itemize}
+    \item \textbf{Besoins fonctionnels} :
+    \begin{itemize}
+        \item Gestion des utilisateurs et authentification
+        \item Gestion des disponibilités et réunions
+        \item Module de questions/réponses
+        \item Génération de plannings et QR codes
+        \item Tableaux de bord et reporting
+    \end{itemize}
+    \item \textbf{Besoins non fonctionnels} :
+    \begin{itemize}
+        \item Performance : Gestion de 500 utilisateurs simultanés
+        \item Sécurité : Chiffrement HTTPS, protection CSRF/XSS
+        \item Convivialité : Interface responsive et intuitive
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 7: Conception UML
+\begin{frame}{Conception UML}
+\begin{itemize}
+    \item \textbf{Modélisation} :
+    \begin{itemize}
+        \item Cas d'utilisation : Gestion des utilisateurs, réunions, disponibilités
+        \item Diagrammes de classes : Structure des entités (utilisateurs, réunions, créneaux)
+        \item Diagrammes de séquences : Processus de création et réservation
+        \item Diagrammes de paquetages : Architecture Laravel
+    \end{itemize}
+    \item \textbf{Règles de gestion} :
+    \begin{itemize}
+        \item Rôles : Admin, Émetteur, Investisseur
+        \item Créneaux : 45 min, non partageables
+        \item Réunions : Statuts (PENDING, CONFIRMED, etc.)
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 8: Technologies Utilisées
+\begin{frame}{Technologies \& Outils}
+\begin{table}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Nom} & \textbf{Version} & \textbf{Description} \\
+\midrule
+Laravel & 12.0 & Framework MVC principal \\
+Livewire & 3.4 & Interfaces dynamiques en PHP \\
+Tailwind CSS & 4.0 & Stylage moderne et responsive \\
+MySQL & 8.0 & Base de données relationnelle \\
+Vite & 6.2.4 & Build tool pour assets front-end \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{itemize}
+    \item \textbf{Outils} : VS Code, Git, Docker, Laravel Sail
+    \item \textbf{Architecture} : MVC pour modularité et maintenabilité
+\end{itemize}
+\end{frame}
+
+% Slide 9: Réalisation
+\begin{frame}{Réalisation du Système}
+\begin{itemize}
+    \item \textbf{Configuration} :
+    \begin{itemize}
+        \item Installation de Laravel via Composer
+        \item Environnement Docker avec Sail
+        \item Base de données MySQL avec migrations
+    \end{itemize}
+    \item \textbf{Développement} :
+    \begin{itemize}
+        \item Modèles Eloquent pour relations
+        \item Contrôleurs pour logique métier
+        \item Vues Blade/Livewire pour interfaces
+    \end{itemize}
+    \item \textbf{Interfaces} :
+    \begin{itemize}
+        \item Tableaux de bord (Admin, Émetteur, Investisseur)
+        \item Gestion des réunions (tableau, grille, calendrier)
+        \item QR codes pour présence
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 10: Interfaces Utilisateur
+\begin{frame}{Interfaces Utilisateur}
+\begin{itemize}
+    \item \textbf{Administrateur} :
+    \begin{itemize}
+        \item Gestion des utilisateurs, réunions, disponibilités
+        \item Statistiques et export de données
+    \end{itemize}
+    \item \textbf{Émetteur} :
+    \begin{itemize}
+        \item Gestion des créneaux et réponses aux questions
+        \item Tableau de bord avec KPI
+    \end{itemize}
+    \item \textbf{Investisseur} :
+    \begin{itemize}
+        \item Demande de réunions, consultation des émetteurs
+        \item QR code personnel
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 11: Conclusion
+\begin{frame}{Conclusion}
+\begin{itemize}
+    \item \textbf{Réussites} :
+    \begin{itemize}
+        \item Digitalisation complète du processus
+        \item Interface intuitive et sécurisée
+        \item Architecture évolutive avec Laravel
+    \end{itemize}
+    \item \textbf{Impact} :
+    \begin{itemize}
+        \item Réduction des erreurs manuelles
+        \item Autonomie accrue des participants
+        \item Données analytiques pour optimisation
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% Slide 12: Perspectives
+\begin{frame}{Perspectives}
+\begin{itemize}
+    \item Support multi-événements
+    \item Intégration avec calendriers externes (Google, Outlook)
+    \item Messagerie instantanée entre participants
+    \item Intelligence artificielle pour suggestions de rencontres
+    \item Réunions virtuelles pour format hybride
+\end{itemize}
+\end{frame}
+
+% Slide 13: Questions
+\begin{frame}{Questions}
+\begin{center}
+\Huge{Questions ?}
+\end{center}
+\end{frame}
+
+\end{document}
