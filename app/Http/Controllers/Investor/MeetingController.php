@@ -11,6 +11,7 @@ use App\Models\MeetingInvestor;
 use App\Models\Room;
 use App\Models\TimeSlot;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -205,6 +206,19 @@ class MeetingController extends Controller
                     ]);
                 }
             }
+
+            // Rechargez les relations nécessaires
+            $meeting->load(['timeSlot', 'issuer', 'investors']);
+
+            // Envoyer une notification à l'émetteur concernant la demande de réunion
+            app(NotificationService::class)->create(
+                $meeting->issuer->id,
+                'Nouvelle demande de réunion',
+                "L'investisseur {$user->first_name} {$user->name} a demandé une réunion pour le {$meeting->timeSlot->date->format('d/m/Y')} de {$meeting->timeSlot->start_time->format('H:i')} à {$meeting->timeSlot->end_time->format('H:i')}.",
+                'meeting',
+                $meeting,
+                ['meeting_id' => $meeting->id]
+            );
 
             DB::commit();
 
