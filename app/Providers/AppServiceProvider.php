@@ -36,6 +36,6 @@ class AppServiceProvider extends ServiceProvider
 
 
         // Disable Debugbar
-        // \Debugbar::disable();
+        \Debugbar::disable();
     }
 }

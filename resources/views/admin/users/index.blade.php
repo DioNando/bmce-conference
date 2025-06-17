@@ -79,6 +79,86 @@
 
         <div class="card card-bordered bg-base-200 shadow-lg" x-data="{ showFilters: false }">
             <div class="card-body">
+                <!-- Statistics Cards -->
+                <section class="card bg-base-100 overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 mb-6 shadow-lg">
+                    <!-- Total Users -->
+                    <div class="stat">
+                        <div class="stat-figure text-secondary">
+                            <x-heroicon-s-user-group class="size-8" />
+                        </div>
+                        <div class="stat-title text-secondary/70">{{ __('Total Users') }}</div>
+                        <div class="stat-value text-secondary">{{ number_format($statistics['total_users']) }}</div>
+                        <div class="stat-desc text-secondary/60">{{ __('All accounts') }}</div>
+                    </div>
+
+                    <!-- Investors -->
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <x-heroicon-s-briefcase class="size-8" />
+                        </div>
+                        <div class="stat-title text-primary/70">{{ __('Investors') }}</div>
+                        <div class="stat-value text-primary">{{ number_format($statistics['total_investors']) }}</div>
+                        <div class="stat-desc text-primary/60">
+                            @if ($statistics['total_users'] > 0)
+                                {{ round(($statistics['total_investors'] / $statistics['total_users']) * 100, 1) }}%
+                                {{ __('of total') }}
+                            @else
+                                {{ __('0% of total') }}
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Issuers -->
+                    <div class="stat">
+                        <div class="stat-figure text-warning">
+                            <x-heroicon-s-building-storefront class="size-8" />
+                        </div>
+                        <div class="stat-title text-warning/70">{{ __('Issuers') }}</div>
+                        <div class="stat-value text-warning">{{ number_format($statistics['total_issuers']) }}</div>
+                        <div class="stat-desc text-warning/60">
+                            @if ($statistics['total_users'] > 0)
+                                {{ round(($statistics['total_issuers'] / $statistics['total_users']) * 100, 1) }}%
+                                {{ __('of total') }}
+                            @else
+                                {{ __('0% of total') }}
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Active Users -->
+                    <div class="stat">
+                        <div class="stat-figure text-success">
+                            <x-heroicon-s-check-circle class="size-8" />
+                        </div>
+                        <div class="stat-title text-success/70">{{ __('Active') }}</div>
+                        <div class="stat-value text-success">{{ number_format($statistics['active_users']) }}</div>
+                        <div class="stat-desc text-success/60">
+                            @if ($statistics['total_users'] > 0)
+                                {{ round(($statistics['active_users'] / $statistics['total_users']) * 100, 1) }}%
+                                {{ __('of total') }}
+                            @else
+                                {{ __('0% of total') }}
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Inactive Users -->
+                    <div class="stat">
+                        <div class="stat-figure text-neutral">
+                            <x-heroicon-s-x-circle class="size-8" />
+                        </div>
+                        <div class="stat-title text-neutral/70">{{ __('Inactive') }}</div>
+                        <div class="stat-value text-neutral">{{ number_format($statistics['inactive_users']) }}</div>
+                        <div class="stat-desc text-neutral/60">
+                            @if ($statistics['total_users'] > 0)
+                                {{ round(($statistics['inactive_users'] / $statistics['total_users']) * 100, 1) }}%
+                                {{ __('of total') }}
+                            @else
+                                {{ __('0% of total') }}
+                            @endif
+                        </div>
+                    </div>
+                </section>
                 <!-- Search and Filter Controls -->
                 <div class="flex justify-between items-center mb-4 gap-4">
                     <div class="form-control w-full max-w-xs">
@@ -270,86 +350,7 @@
                     </div>
                 </div>
 
-                <!-- Statistics Cards -->
-                <section class="card bg-base-100 overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 mt-6 shadow-lg">
-                    <!-- Total Users -->
-                    <div class="stat">
-                        <div class="stat-figure text-secondary">
-                            <x-heroicon-s-user-group class="size-8" />
-                        </div>
-                        <div class="stat-title text-secondary/70">{{ __('Total Users') }}</div>
-                        <div class="stat-value text-secondary">{{ number_format($statistics['total_users']) }}</div>
-                        <div class="stat-desc text-secondary/60">{{ __('All accounts') }}</div>
-                    </div>
 
-                    <!-- Investors -->
-                    <div class="stat">
-                        <div class="stat-figure text-primary">
-                            <x-heroicon-s-briefcase class="size-8" />
-                        </div>
-                        <div class="stat-title text-primary/70">{{ __('Investors') }}</div>
-                        <div class="stat-value text-primary">{{ number_format($statistics['total_investors']) }}</div>
-                        <div class="stat-desc text-primary/60">
-                            @if ($statistics['total_users'] > 0)
-                                {{ round(($statistics['total_investors'] / $statistics['total_users']) * 100, 1) }}%
-                                {{ __('of total') }}
-                            @else
-                                {{ __('0% of total') }}
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Issuers -->
-                    <div class="stat">
-                        <div class="stat-figure text-warning">
-                            <x-heroicon-s-building-storefront class="size-8" />
-                        </div>
-                        <div class="stat-title text-warning/70">{{ __('Issuers') }}</div>
-                        <div class="stat-value text-warning">{{ number_format($statistics['total_issuers']) }}</div>
-                        <div class="stat-desc text-warning/60">
-                            @if ($statistics['total_users'] > 0)
-                                {{ round(($statistics['total_issuers'] / $statistics['total_users']) * 100, 1) }}%
-                                {{ __('of total') }}
-                            @else
-                                {{ __('0% of total') }}
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Active Users -->
-                    <div class="stat">
-                        <div class="stat-figure text-success">
-                            <x-heroicon-s-check-circle class="size-8" />
-                        </div>
-                        <div class="stat-title text-success/70">{{ __('Active') }}</div>
-                        <div class="stat-value text-success">{{ number_format($statistics['active_users']) }}</div>
-                        <div class="stat-desc text-success/60">
-                            @if ($statistics['total_users'] > 0)
-                                {{ round(($statistics['active_users'] / $statistics['total_users']) * 100, 1) }}%
-                                {{ __('of total') }}
-                            @else
-                                {{ __('0% of total') }}
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Inactive Users -->
-                    <div class="stat">
-                        <div class="stat-figure text-neutral">
-                            <x-heroicon-s-x-circle class="size-8" />
-                        </div>
-                        <div class="stat-title text-neutral/70">{{ __('Inactive') }}</div>
-                        <div class="stat-value text-neutral">{{ number_format($statistics['inactive_users']) }}</div>
-                        <div class="stat-desc text-neutral/60">
-                            @if ($statistics['total_users'] > 0)
-                                {{ round(($statistics['inactive_users'] / $statistics['total_users']) * 100, 1) }}%
-                                {{ __('of total') }}
-                            @else
-                                {{ __('0% of total') }}
-                            @endif
-                        </div>
-                    </div>
-                </section>
             </div>
 
         </div>
